@@ -1,0 +1,12 @@
+#PT/BR
+A peça saíra do LOBBY somente se for tirado *6* no dado
+A peça precisa andar todo o mapa e chegar na sua casa para então chegar ao HEAVEN.
+
+Ganha quem colocar todas as *4* peças no HEAVEN
+
+
+#ENGLISH
+The piece will leave the LOBBY only if *6* is rolled on the dice
+The piece needs to walk all over the map and arrive at your house and then reach HEAVEN.
+
+Whoever puts all *4* pieces in HEAVEN wins
