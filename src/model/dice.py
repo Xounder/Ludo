@@ -2,7 +2,7 @@ import pygame
 from random import randint
 
 import resource.settings as config
-from util.timer_management import TimerManagement
+from services.updater import Updater
 
 class Dice:
     def __init__(self) -> None:
@@ -27,7 +27,7 @@ class Dice:
         self.dices_surf = [pygame.image.load(f'img/dice/dice{i+1}.png').convert_alpha() for i in range(6)]
         self.image = self.dices_surf[self.value-1]
         self.rect = self.image.get_rect(center=(config.SCREEN_WIDTH/2 + 1, config.SCREEN_HEIGHT/2 + 1))
-        TimerManagement.add_timer('animation_timer', 0.4)
+        Updater.add_to_animate('dice_timer', 0.4)
 
     def is_max_value(self) -> bool:
         """
@@ -59,19 +59,9 @@ class Dice:
         """
         self.screen.blit(self.image, self.rect)
 
-    def update(self) -> None:
-        """
-        Atualiza o estado do dado com base no temporizador
-        Se o temporizador está ativo, executa a animação
-        Caso contrário, se o temporizador foi ativado, rola o dado
-        """
-        if TimerManagement.is_run('animation_timer'):
-            self.animate()
-        else:
-            if self.timer_activated:
-                self.rolled = True
-                self.timer_activated = False
-                self.roll()
+    def after_animate(self) -> None:
+        self.rolled = True
+        self.roll()
 
     def animate(self) -> None:
         """
@@ -93,7 +83,7 @@ class Dice:
             bool: Retorna True se houve colisão, caso contrário, False.
         """
         if self.rect.collidepoint(mouse_pos):
-            TimerManagement.active_timer('animation_timer')
+            Updater.call_to_animate('dice_timer', self.animate, self.after_animate)
             self.timer_activated = True
             self.to_roll = False    
             return True

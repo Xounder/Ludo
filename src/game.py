@@ -5,6 +5,7 @@ from services.game_controller import GameController
 from services.start_game import StartGame
 
 from util.timer_management import TimerManagement
+from services.updater import Updater
 
 class Game:
     def __init__(self) -> None:
@@ -16,6 +17,8 @@ class Game:
         self.game_controller = GameController()
         self.start_game = StartGame()
 
+        Updater.set_exclusive_update(self.start_game.update)
+        
         self.game_controller.draw_map()
     
     def run(self) -> None:
@@ -25,21 +28,20 @@ class Game:
                     pygame.quit()
                     sys.exit()
                     
-            TimerManagement.update_timers()
-
+            Updater.update()
             if self.start_game.active:
-                self.start_game.update()
                 self.start_game.draw()
             else:
                 if self.start_game.active_game_controller:
                     self.game_controller.start_game(self.start_game.selectors)
                     self.start_game.active_game_controller = False
+                    Updater.set_exclusive_update(self.game_controller.update)
 
             if self.game_controller.run:
-                self.game_controller.update()
                 self.game_controller.draw()
             else:
                 if not self.start_game.active_game_controller:
+                    Updater.set_exclusive_update(self.start_game.update)
                     self.start_game.init()
 
             pygame.display.update()

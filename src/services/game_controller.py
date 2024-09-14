@@ -110,7 +110,6 @@ class GameController:
         """
         Atualiza o estado do jogo
         """
-        self.dice.update()
         if not self.atual_ply.played:
             self.atual_ply.update(self.dice)
         else:
