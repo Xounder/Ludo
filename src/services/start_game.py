@@ -23,7 +23,6 @@ class StartGame:
         """
         self.players = []
         self.active = True
-        self.active_game_controller = True
         self.selectors = [
             {'color': 0, 'player': config.PLAYER},
             {'color': 1, 'player': config.PLAYER},

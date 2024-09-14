@@ -3,6 +3,9 @@ import resource.settings as config
 
 from model.map import Map
 from model.dice import Dice
+from services.updater import Updater
+
+import time
 
 class Piece:
     def __init__(self, id:int, color:str, lobby_pos:list) -> None:
@@ -24,6 +27,8 @@ class Piece:
         self.goal_achieved = False
         self.is_lobby = True
         self.steps = 0
+        self.moves = 0
+        self.max_steps = 0
         self.eliminate = False
         self.PIECE_STEPS_GOAL = config.PIECE_STEPS_GOAL
         self.assets()
@@ -34,6 +39,7 @@ class Piece:
         """
         self.image = pygame.image.load(f'img/{self.color}.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=self.to_tile(self.lobby_pos))
+        Updater.add_to_animate('piece_timer', 2)
 
     def get_atual_pos(self, step=-1) -> list:
         """
@@ -114,42 +120,51 @@ class Piece:
         """
         self.screen.blit(self.image, self.rect)
 
-    def move(self, moves:int) -> bool:
+    def animate(self) -> None:
+        """
+        Atualiza a imagem da peça para criar uma animação de movimento
+        """
+        if self.steps < self.max_steps:
+            self.steps += 1
+            self.move()
+            time.sleep(0.3)
+        else:
+            Updater.finish_animation('piece_timer')
+
+    def move(self) -> bool:
         """
         Move a peça um número específico de passos
         Atualiza o estado da peça e a posição no tabuleiro
         
-        Args:
-            moves (int): Número de passos a serem movidos pela peça
-
         Returns:
             bool: Retorna True se a peça foi movida, caso contrário, False
         """
-        moved = False
+        Map.add_redraw_map(self.get_atual_pos(self.steps - self.moves))
+        self.change_atual_cell()
+        self.update_rect()
+        self.check_goal()
+    
+    def can_move(self) -> None:
         if self.steps >= self.PIECE_STEPS_GOAL:
-            if self.steps + moves <= config.MAX_PIECE_STEPS:
-                self.steps += moves        
-                moved = True
-        else:
-            self.steps += moves
-            moved = True
-
-        if moved:
-            Map.add_redraw_map(self.get_atual_pos(self.steps - moves))
-            self.change_atual_cell(moves)
-            self.update_rect()
-            self.check_goal()
-        return moved
-                    
-    def change_atual_cell(self, moves:int) -> None:
+            if self.steps + self.moves > config.MAX_PIECE_STEPS:
+                return False
+        return True     
+    
+    def to_animate_move(self, moves:int):
+        self.moves = moves
+        self.max_steps = self.steps + moves
+        if self.can_move():
+            Updater.call_to_animate('piece_timer', self.animate)
+            return True
+        return False
+                   
+    def change_atual_cell(self) -> None:
         """
         Atualiza a célula atual da peça com base no número de passos dados
         Ajusta a célula se a peça alcançar ou exceder o número máximo de passos
         
-        Args:
-            moves (int): Número de passos a serem dados
         """
-        self.atual_cell += moves
+        self.atual_cell += 1
         if self.steps >= self.PIECE_STEPS_GOAL:
             self.atual_cell = self.steps - self.PIECE_STEPS_GOAL
         else:
@@ -177,7 +192,7 @@ class Piece:
         """
         if self.rect.collidepoint(mouse_pos):
             if not self.is_lobby:
-                return self.move(dice_value)
+                return self.to_animate_move(dice_value)
             else:
                 self.leave_lobby()
                 return True

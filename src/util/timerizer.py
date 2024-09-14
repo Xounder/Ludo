@@ -28,3 +28,6 @@ class Timerizer:
         """
         self.is_run = True
         self.start_time = time()
+    
+    def deactive(self):
+        self.is_run = False

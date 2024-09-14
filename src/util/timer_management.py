@@ -58,3 +58,7 @@ class TimerManagement:
         else:
             print(f'Timer {timer_name} não encontrado.')
             return False
+        
+    @staticmethod
+    def deactive(timer_name:str) -> None:
+        TimerManagement.timers[timer_name].deactive()

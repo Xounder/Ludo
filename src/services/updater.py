@@ -24,10 +24,16 @@ class Updater:
     @staticmethod
     def stop_exclusive_update():
         Updater.exclusive_update = None
+        Updater.exclusive_callback = None
+        Updater.is_exclusive_callback = False
 
     @staticmethod
     def add_to_animate(timer_name:str, duration:int) -> None:
         TimerManagement.add_timer(timer_name, duration)
+
+    @staticmethod
+    def finish_animation(timer_name:str) -> None:
+        TimerManagement.deactive(timer_name)
 
     @staticmethod
     def call_to_animate(timer_name:str, todo:Callable[[], None], callback: Optional[Callable[[], None]] = None) -> None:

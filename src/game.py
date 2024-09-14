@@ -20,6 +20,9 @@ class Game:
         Updater.set_exclusive_update(self.start_game, self.game_start)
         
         self.game_controller.draw_map()
+
+    def game_start(self) -> None:
+        self.game_controller.start_game(self.start_game.selectors)
     
     def run(self) -> None:
         while True:
@@ -42,8 +45,6 @@ class Game:
             pygame.display.update()
             self.clock.tick(60)
 
-    def game_start(self) -> None:
-        self.game_controller.start_game(self.start_game.selectors)
 
 game = Game()
 game.run()

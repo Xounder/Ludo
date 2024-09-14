@@ -15,7 +15,6 @@ class Dice:
         self.value = self.MAX_VALUE
         self.to_roll = True
         self.rolled = False
-        self.timer_activated = False
         self.atual_frame = 0
         self.assets()
 
@@ -51,7 +50,6 @@ class Dice:
         """
         self.to_roll = True
         self.rolled = False
-        self.timer_activated = False
 
     def draw(self) -> None:
         """
@@ -59,7 +57,7 @@ class Dice:
         """
         self.screen.blit(self.image, self.rect)
 
-    def after_animate(self) -> None:
+    def callback(self) -> None:
         self.rolled = True
         self.roll()
 
@@ -83,8 +81,7 @@ class Dice:
             bool: Retorna True se houve colisão, caso contrário, False.
         """
         if self.rect.collidepoint(mouse_pos):
-            Updater.call_to_animate('dice_timer', self.animate, self.after_animate)
-            self.timer_activated = True
+            Updater.call_to_animate('dice_timer', self.animate, self.callback)
             self.to_roll = False    
             return True
         return False

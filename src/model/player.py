@@ -92,7 +92,7 @@ class Player:
         Args:
             moves (int): Número de casas a serem movidas
         """
-        self.atual_piece.move(moves)
+        self.atual_piece.to_animate_move(moves)
     
     def get_pieces_pos(self) -> list:
         """
@@ -178,7 +178,7 @@ class Player:
         else:
             if self.is_only1_out(): # somente uma peça fora do lobby
                 if dice.is_max_value(): return False
-                self.atual_piece.move(dice.value)                
+                self.atual_piece.to_animate_move(dice.value)                
                 return True
             else: 
                 if self.is_only1_piece_to_move(dice.value): # somente uma peça é possivel de mover
