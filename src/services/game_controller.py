@@ -14,12 +14,12 @@ class GameController:
             screen (pygame.Surface): Superfície de exibição do jogo
             map (Map): Instância da classe Map para gerenciar o mapa do jogo
             dice (Dice): Instância da classe Dice para gerenciar o dado
-            run (bool): Flag que indica se o jogo está em execução
+            active (bool): Flag que indica se o jogo está em execução
         """
         self.screen = pygame.display.get_surface()
         self.map = Map()
         self.dice = Dice()
-        self.run = False        
+        self.active = False        
 
     def draw_map(self) -> None:
         """
@@ -46,7 +46,7 @@ class GameController:
         self.ply_id = 0
         self.atual_ply = self.players[self.ply_id]
         self.draw_map()
-        self.run = True
+        self.active = True
 
     def next_ply(self) -> None:
         """
@@ -116,6 +116,7 @@ class GameController:
             if not self.is_end_game():
                 if self.is_end_turn():
                     self.next_ply()
+
 
     def play_again(self) -> None:
         """
