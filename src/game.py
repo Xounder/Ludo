@@ -4,7 +4,6 @@ import resource.settings as config
 from services.game_controller import GameController
 from services.start_game import StartGame
 
-from util.timer_management import TimerManagement
 from services.updater import Updater
 
 class Game:

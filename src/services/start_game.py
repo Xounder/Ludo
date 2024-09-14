@@ -4,6 +4,8 @@ from util.input_management import InputManagement
 
 import resource.settings as config
 
+from util.painter import ClickRect, Painter
+
 class StartGame:
     def __init__(self) -> None:
         """
@@ -16,6 +18,8 @@ class StartGame:
         
         self.init()
         self.create_surf_inputs()
+
+        self.painter = Painter()
 
     def init(self) -> None:
         """
@@ -35,8 +39,10 @@ class StartGame:
         Cria superfícies para os botões de início, seleção de cor e seleção de jogador
         """
         # Start Button
-        self.start_button = pygame.Surface((90, 60))
-        self.start_button_rect = self.start_button.get_rect(topleft=((config.SCREEN_WIDTH/2 + 40, config.SCREEN_HEIGHT/2 - 15)))
+        self.start_button = ClickRect(surf_size=(90, 60),
+                                      rect_pos=(config.SCREEN_WIDTH/2 + 40, config.SCREEN_HEIGHT/2 - 15),
+                                      d=3,
+                                      topleft=True)
         # Color Selection Button
         self.color_selection = []
         # Player Selection Button
@@ -44,29 +50,30 @@ class StartGame:
         pos = [40, 95]
         for i in range(4):
             # Color
-            surf = pygame.Surface((20, 20))
-            rect = surf.get_rect(center=(self.pos[0] + pos[0], self.pos[1] + pos[1]))
-            self.color_selection.append({'surface': surf, 'rect': rect})
+            self.color_selection.append(ClickRect(surf_size=(20, 20), 
+                                                  rect_pos=(self.pos[0] + pos[0], self.pos[1] + pos[1]),
+                                                  r=10,
+                                                  center=True))
             # Player
-            surf = pygame.Surface((100, 30))
-            rect = surf.get_rect(topleft=(self.pos[0] + pos[0] + 20, self.pos[1] + pos[1] - 15))
-            self.player_selection.append({'surface': surf, 'rect': rect})
-
+            self.player_selection.append(ClickRect(surf_size=(100, 30),
+                                                   rect_pos=(self.pos[0] + pos[0] + 20, self.pos[1] + pos[1] - 15),
+                                                   d=2,
+                                                   topleft=True))
             pos[1] += 40
 
     def draw(self) -> None:
         """
         Desenha a tela de início, incluindo botões e seletores de cor e jogador
         """
-        d = 10
-        self.draw_rect(self.size, self.pos, d)
+        Painter.draw_rect(screen=self.screen, size=self.size, pos=self.pos, d=10)
 
-        f_c = 'black' if self.is_start_game() else 'red'
-        self.draw_animated_rect(self.start_button_rect, self.start_button_rect.size, 
-                                self.start_button_rect.topleft, 3, f_color=f_c)
+        b_c = 'green' if self.is_start_game() else 'red'
+        self.start_button.draw_animated_rect(self.screen, b_color=[b_c, 'gray'])
             
         for i in range(4):
             self.draw_selector(i)
+
+        self.draw_texts()
 
     def draw_selector(self, id:int) -> None:
         """
@@ -78,58 +85,55 @@ class StartGame:
         atual_sel = self.selectors[id]
         c = (['gray', 'gray'] if atual_sel['player'] == config.INACTIVE 
                              else ['black', config.colors[atual_sel['color']]])
-        button_color = self.color_selection[id]
-        button_player = self.player_selection[id]
 
-        pygame.draw.circle(self.screen, c[0], button_color['rect'].center, 10, 3)
-        pygame.draw.circle(self.screen, c[1], button_color['rect'].center, 5)
-        self.draw_animated_rect(button_player['rect'], button_player['rect'].size, 
-                                button_player['rect'].topleft, 2, f_color='black')
+        self.color_selection[id].draw_animated_circle(screen=self.screen, colors=c)
+        self.player_selection[id].draw_animated_rect(screen=self.screen, f_color='black')
 
-    def draw_rect(self, size:list, pos:list, d:int, f_color='black', b_color='white') -> None:
-        """
-        Desenha um retângulo com uma borda
+    def draw_texts(self) -> None:
+        self.painter.blit_text_shadow(text='L U D O', 
+                                      color='red', 
+                                      pos=(config.SCREEN_WIDTH/2, config.SCREEN_HEIGHT/2 - 85), 
+                                      back_color='black', 
+                                      center=True)
 
-        Args:
-            size (list): O tamanho do retângulo [largura, altura]
-            pos (list): A posição do retângulo [x, y]
-            d (int): A espessura da borda
-            f_color (str, opcional): A cor de preenchimento do retângulo. Padrão é 'black'
-            b_color (str, opcional): A cor da borda do retângulo. Padrão é 'white'
-        """
-        pygame.draw.rect(self.screen, f_color, (pos[0], pos[1], size[0], size[1]), 0)
-        pygame.draw.rect(self.screen, b_color, (pos[0] + d , pos[1]+ d, size[0] - d*2 , size[1] - d*2), 0)
-
-    def draw_animated_rect(self, rect:pygame.rect.Rect, size:list, pos:list, d:int, f_color='black'):
-        """
-        Desenha um retângulo que muda de cor quando o cursor está sobre ele
-
-        Args:
-            rect (pygame.rect.Rect): O retângulo a ser desenhado
-            size (list): O tamanho do retângulo [largura, altura]
-            pos (list): A posição do retângulo [x, y]
-            d (int): A espessura da borda
-            f_color (str, opcional): A cor de preenchimento do retângulo. Padrão é 'black'
-        """
-        b_c = 'red' if rect.collidepoint(pygame.mouse.get_pos()) else 'gray'
-        self.draw_rect(size, pos, d, f_color=f_color, b_color=b_c)
+        self.painter.blit_text_shadow(text='PLAY', 
+                                      color='black', 
+                                      pos=self.start_button.get_rect(center=True), 
+                                      back_color='white', 
+                                      center=True)
+        
+        for i, sel in enumerate(self.selectors):
+            self.painter.blit_text_shadow(text=config.player_status[sel['player']], 
+                                          color=config.colors[sel['color']], 
+                                          pos=self.player_selection[i].get_rect(center=True), 
+                                          back_color='black', 
+                                          center=True,
+                                          font_size=26)
+            
+            pos = self.player_selection[i].get_rect(midright=True)
+            self.painter.blit_text_shadow(text=f'P{i+1}', 
+                                          color=config.colors[sel['color']], 
+                                          pos=(pos[0] + 10, pos[1]), 
+                                          back_color='black', 
+                                          center=True,
+                                          font_size=24)
 
     def update(self) -> None:
         """
         Atualiza a tela de início, verificando a interação do usuário com os botões e seletores
         """
         if InputManagement.mouse_is_pressed():
-            if self.start_button_rect.collidepoint(InputManagement.cursor):
+            if self.start_button.is_rect_collide_point(InputManagement.cursor):
                 self.active = not self.is_start_game()
             else:
                 for i, b_color in enumerate(self.color_selection):
                     if self.selectors[i]['player'] == config.INACTIVE: continue
-                    if b_color['rect'].collidepoint(InputManagement.cursor):
+                    if b_color.is_rect_collide_point(InputManagement.cursor):
                         self.selectors[i]['color'] = (self.selectors[i]['color'] + 1) % len(config.colors)
                         return
 
                 for i, ply_sel in enumerate(self.player_selection):
-                    if ply_sel['rect'].collidepoint(InputManagement.cursor):
+                    if ply_sel.is_rect_collide_point(InputManagement.cursor):
                         self.selectors[i]['player'] = (self.selectors[i]['player'] + 1) % 3
                         break
             
@@ -143,7 +147,9 @@ class StartGame:
         check = []
         for sel in self.selectors:
             if sel['player'] == config.INACTIVE: continue
-            if check and check.count(sel['color']):
-                return False
-            check.append(sel['color'])
-        return True
+            if check and check.count(sel['color']) > 1: return False
+            check.append(sel['player'])
+
+        print(check)
+        if len(check) >= 2 and check.count(config.PLAYER) >= 1: return True
+        return False

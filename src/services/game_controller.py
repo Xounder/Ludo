@@ -118,7 +118,6 @@ class GameController:
                 if self.is_end_turn():
                     self.next_ply()
 
-
     def play_again(self) -> None:
         """
         Reinicia o estado do jogador atual e o dado para permitir uma nova jogada

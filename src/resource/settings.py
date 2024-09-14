@@ -12,6 +12,8 @@ PLAYER = 0
 IA = 1
 INACTIVE = 2
 
+player_status = ['PLAYER', 'IA', '']
+
 # Cores disponíveis para os jogadores
 colors = ['yellow', 'blue', 'red', 'green']
 
