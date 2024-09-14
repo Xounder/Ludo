@@ -90,33 +90,37 @@ class StartGame:
         self.player_selection[id].draw_animated_rect(screen=self.screen, f_color='black')
 
     def draw_texts(self) -> None:
-        self.painter.blit_text_shadow(text='L U D O', 
-                                      color='red', 
-                                      pos=(config.SCREEN_WIDTH/2, config.SCREEN_HEIGHT/2 - 85), 
-                                      back_color='black', 
-                                      center=True)
+        Painter.blit_text_shadow(screen=self.screen,
+                                 text='L U D O', 
+                                 color='red', 
+                                 pos=(config.SCREEN_WIDTH/2, config.SCREEN_HEIGHT/2 - 85), 
+                                 back_color='black', 
+                                 center=True)
 
-        self.painter.blit_text_shadow(text='PLAY', 
-                                      color='black', 
-                                      pos=self.start_button.get_rect(center=True), 
-                                      back_color='white', 
-                                      center=True)
+        Painter.blit_text_shadow(screen=self.screen,
+                                 text='PLAY', 
+                                 color='black', 
+                                 pos=self.start_button.get_rect(center=True), 
+                                 back_color='white', 
+                                 center=True)
         
         for i, sel in enumerate(self.selectors):
-            self.painter.blit_text_shadow(text=config.player_status[sel['player']], 
-                                          color=config.colors[sel['color']], 
-                                          pos=self.player_selection[i].get_rect(center=True), 
-                                          back_color='black', 
-                                          center=True,
-                                          font_size=26)
+            Painter.blit_text_shadow(screen=self.screen,
+                                     text=config.player_status[sel['player']], 
+                                     color=config.colors[sel['color']], 
+                                     pos=self.player_selection[i].get_rect(center=True), 
+                                     back_color='black', 
+                                     center=True,
+                                     font_size=26)
             
             pos = self.player_selection[i].get_rect(midright=True)
-            self.painter.blit_text_shadow(text=f'P{i+1}', 
-                                          color=config.colors[sel['color']], 
-                                          pos=(pos[0] + 10, pos[1]), 
-                                          back_color='black', 
-                                          center=True,
-                                          font_size=24)
+            Painter.blit_text_shadow(screen=self.screen,
+                                     text=f'P{i+1}', 
+                                     color=config.colors[sel['color']], 
+                                     pos=(pos[0] + 10, pos[1]), 
+                                     back_color='black', 
+                                     center=True,
+                                     font_size=24)
 
     def update(self) -> None:
         """
@@ -148,9 +152,8 @@ class StartGame:
         check_player = []
         for sel in self.selectors:
             if sel['player'] == config.INACTIVE: continue
-            if check_color and check_color.count(sel['color']) > 1: return False
+            if check_color and check_color.count(sel['color']): return False
             check_color.append(sel['color'])
-            check_color.append(sel['player'])
-
-        if len(check_player) >= 2 and check_player.count(config.PLAYER) >= 1: return True
+            check_player.append(sel['player'])
+        if len(check_color) >= 2 and check_player.count(config.PLAYER) >= 1: return True
         return False

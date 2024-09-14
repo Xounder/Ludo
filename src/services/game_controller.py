@@ -5,6 +5,12 @@ from model.dice import Dice
 
 import resource.settings as config
 
+from util.painter import Painter
+from services.updater import Updater
+
+import random
+import time
+
 class GameController:
     def __init__(self) -> None:
         """
@@ -19,7 +25,9 @@ class GameController:
         self.screen = pygame.display.get_surface()
         self.map = Map()
         self.dice = Dice()
-        self.active = False        
+        self.active = False   
+        self.timer_name = 'end-game_timer'
+        Updater.add_to_animate(self.timer_name, 2.5)     
 
     def draw_map(self) -> None:
         """
@@ -92,6 +100,33 @@ class GameController:
             if not p.is_playable(self.dice): continue  
             pos = p.rect.center
             pygame.draw.circle(self.screen, 'black', (pos[0] + 1, pos[1] + 1), 5, 0)
+
+    def draw_end_game(self, color:str) -> None:
+        size = (300, 150)
+        pos = (config.SCREEN_WIDTH/2 - size[0]/2, config.SCREEN_HEIGHT/2 - size[1]/2)
+        Painter.draw_rect(screen=self.screen, 
+                          size=size, 
+                          pos=pos,
+                          d=5,
+                          f_color=color,
+                          b_color='gray')
+        
+        pos = (config.SCREEN_WIDTH/2, config.SCREEN_HEIGHT/2)
+        Painter.blit_text_shadow(screen=self.screen,
+                                 text=f'PLAYER{self.ply_id+1}', 
+                                 color=self.atual_ply.color, 
+                                 pos=(pos[0], pos[1]-20), 
+                                 back_color='black', 
+                                 center=True,
+                                 font_size=42)
+        
+        Painter.blit_text_shadow(screen=self.screen,
+                                 text=f'WIN!', 
+                                 color='red', 
+                                 pos=(pos[0], pos[1] + 20), 
+                                 back_color='black', 
+                                 center=True,
+                                 font_size=42)
         
     def draw(self) -> None:
         """
@@ -125,6 +160,14 @@ class GameController:
         self.atual_ply.play_again()
         self.dice.reset()
 
+    def animate(self) -> None:
+        self.draw_end_game(random.choice(config.colors))
+        time.sleep(0.3)
+
+    def callback(self) -> None:
+        self.draw_map()
+        self.active = False
+
     def is_end_game(self) -> bool:
         """
         Verifica se o jogo terminou, ou seja, se o jogador atual ganhou
@@ -132,7 +175,10 @@ class GameController:
         Returns:
             bool: Retorna True se o jogador atual ganhou o jogo, caso contrário, False
         """
-        return self.atual_ply.is_win()
+        if self.atual_ply.is_win():
+            Updater.call_to_animate(self.timer_name, self.animate, self.callback)
+            return True
+        return False
     
     def is_end_turn(self) -> bool:
         """

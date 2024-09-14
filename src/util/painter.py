@@ -2,10 +2,8 @@ import pygame
 
 class Painter:
 
-    def __init__(self) -> None:
-        self.screen = pygame.display.get_surface()
-
-    def blit_text(self, text:str, color:str, pos:list, topright=False, center=False, font_size=42) -> None:
+    @staticmethod
+    def blit_text(screen:pygame.display, text:str, color:str, pos:list, topright=False, center=False, font_size=42) -> None:
         font = pygame.font.Font('font/Pixeltype.ttf', font_size)
         txt = font.render(text, False, color)
 
@@ -13,11 +11,13 @@ class Painter:
         elif center: txt_rect = txt.get_rect(center= (pos))
         else: txt_rect = txt.get_rect(topleft= (pos))       
 
-        self.screen.blit(txt, txt_rect)
+        screen.blit(txt, txt_rect)
 
-    def blit_text_shadow(self, text:str, color:str, pos:list, back_color='black', topright=False, center=False, font_size=42) -> None:
-        self.blit_text(text, back_color, [pos[0] + 2, pos[1] + 2], topright, center, font_size)
-        self.blit_text(text, color, pos, topright, center, font_size)
+    @staticmethod
+    def blit_text_shadow(screen:pygame.display, text:str, color:str, 
+                         pos:list, back_color='black', topright=False, center=False, font_size=42) -> None:
+        Painter.blit_text(screen, text, back_color, [pos[0] + 2, pos[1] + 2], topright, center, font_size)
+        Painter.blit_text(screen, text, color, pos, topright, center, font_size)
 
     @staticmethod
     def draw_rect(screen:pygame.display, size:list, pos:list, d:int, f_color='black', b_color='white') -> None:
