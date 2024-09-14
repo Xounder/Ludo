@@ -87,6 +87,7 @@ class GameController:
         Desenha as peças do jogador atual que podem ser movidas, se o dado já foi rolado
         """
         if not self.dice.rolled: return
+        if self.atual_ply.atual_piece.moved: return
         for p in self.atual_ply.pieces:
             if not p.is_playable(self.dice): continue  
             pos = p.rect.center

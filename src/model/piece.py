@@ -30,6 +30,8 @@ class Piece:
         self.moves = 0
         self.max_steps = 0
         self.eliminate = False
+        self.moved = False
+        self.timer_name = 'piece_timer'
         self.PIECE_STEPS_GOAL = config.PIECE_STEPS_GOAL
         self.assets()
     
@@ -39,7 +41,7 @@ class Piece:
         """
         self.image = pygame.image.load(f'img/{self.color}.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=self.to_tile(self.lobby_pos))
-        Updater.add_to_animate('piece_timer', 2)
+        Updater.add_to_animate(self.timer_name, 2)
 
     def get_atual_pos(self, step=-1) -> list:
         """
@@ -120,6 +122,9 @@ class Piece:
         """
         self.screen.blit(self.image, self.rect)
 
+    def reset(self) -> None:
+        self.moved = False
+
     def animate(self) -> None:
         """
         Atualiza a imagem da peça para criar uma animação de movimento
@@ -129,7 +134,7 @@ class Piece:
             self.move()
             time.sleep(0.3)
         else:
-            Updater.finish_animation('piece_timer')
+            Updater.finish_animation(self.timer_name)
 
     def move(self) -> bool:
         """
@@ -152,9 +157,10 @@ class Piece:
     
     def to_animate_move(self, moves:int):
         self.moves = moves
-        self.max_steps = self.steps + moves
         if self.can_move():
-            Updater.call_to_animate('piece_timer', self.animate)
+            self.max_steps = self.steps + moves 
+            self.moved = True
+            Updater.call_to_animate(self.timer_name, self.animate, callback=self.reset)
             return True
         return False
                    

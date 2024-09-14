@@ -16,6 +16,7 @@ class Dice:
         self.to_roll = True
         self.rolled = False
         self.atual_frame = 0
+        self.timer_name = 'dice_timer'
         self.assets()
 
     def assets(self) -> None:
@@ -26,7 +27,7 @@ class Dice:
         self.dices_surf = [pygame.image.load(f'img/dice/dice{i+1}.png').convert_alpha() for i in range(6)]
         self.image = self.dices_surf[self.value-1]
         self.rect = self.image.get_rect(center=(config.SCREEN_WIDTH/2 + 1, config.SCREEN_HEIGHT/2 + 1))
-        Updater.add_to_animate('dice_timer', 0.4)
+        Updater.add_to_animate(self.timer_name, 0.4)
 
     def is_max_value(self) -> bool:
         """
@@ -81,7 +82,7 @@ class Dice:
             bool: Retorna True se houve colisão, caso contrário, False.
         """
         if self.rect.collidepoint(mouse_pos):
-            Updater.call_to_animate('dice_timer', self.animate, self.callback)
+            Updater.call_to_animate(self.timer_name, self.animate, self.callback)
             self.to_roll = False    
             return True
         return False
