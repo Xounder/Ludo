@@ -144,12 +144,13 @@ class StartGame:
         Returns:
             bool: Retorna True se o jogo pode começar, caso contrário, False
         """
-        check = []
+        check_color = []
+        check_player = []
         for sel in self.selectors:
             if sel['player'] == config.INACTIVE: continue
-            if check and check.count(sel['color']) > 1: return False
-            check.append(sel['player'])
+            if check_color and check_color.count(sel['color']) > 1: return False
+            check_color.append(sel['color'])
+            check_color.append(sel['player'])
 
-        print(check)
-        if len(check) >= 2 and check.count(config.PLAYER) >= 1: return True
+        if len(check_player) >= 2 and check_player.count(config.PLAYER) >= 1: return True
         return False
