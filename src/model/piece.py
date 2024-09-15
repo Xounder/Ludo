@@ -80,7 +80,7 @@ class Piece:
         """
         Atualiza a posição do retângulo da peça com base na sua posição atual no tabuleiro
         """
-        l = (config.map_steps[self.atual_cell] if self.steps < 
+        l = (config.map_steps[self.atual_cell] if self.steps <= 
                      self.PIECE_STEPS_GOAL else config.map_goal_steps[self.color][self.atual_cell])
         self.rect.topleft = self.to_tile(l)
         
@@ -132,7 +132,7 @@ class Piece:
         if self.steps < self.max_steps:
             self.steps += 1
             self.move()
-            time.sleep(0.3)
+            time.sleep(0.01)
         else:
             Updater.finish_animation(self.timer_name)
 
@@ -144,7 +144,7 @@ class Piece:
         Returns:
             bool: Retorna True se a peça foi movida, caso contrário, False
         """
-        Map.add_redraw_map(self.get_atual_pos(self.steps - self.moves))
+        Map.add_redraw_map(self.get_atual_pos(self.steps - 1))
         self.change_atual_cell()
         self.update_rect()
         self.check_goal()
@@ -171,11 +171,11 @@ class Piece:
         
         """
         self.atual_cell += 1
-        if self.steps >= self.PIECE_STEPS_GOAL:
-            self.atual_cell = self.steps - self.PIECE_STEPS_GOAL
+        if self.steps >= config.MAX_STEPS_MAP:
+            self.atual_cell = self.steps - config.MAX_STEPS_MAP
         else:
-            if self.atual_cell >= self.PIECE_STEPS_GOAL:
-                self.atual_cell = self.atual_cell - self.PIECE_STEPS_GOAL
+            if self.atual_cell >= config.MAX_STEPS_MAP:
+                self.atual_cell = self.atual_cell - config.MAX_STEPS_MAP
     
     def check_goal(self) -> None:
         """
