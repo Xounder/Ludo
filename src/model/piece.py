@@ -4,6 +4,7 @@ import resource.settings as config
 from model.map import Map
 from model.dice import Dice
 from services.updater import Updater
+from util.sound_management import SoundManagement
 
 import time
 
@@ -132,6 +133,7 @@ class Piece:
         if self.steps < self.max_steps:
             self.steps += 1
             self.move()
+            SoundManagement.play_sound(SoundManagement.movement)
             time.sleep(0.01)
         else:
             Updater.finish_animation(self.timer_name)
@@ -182,7 +184,8 @@ class Piece:
         Verifica se a peça alcançou o objetivo final e marca a meta como alcançada se for o caso
         """
         if self.steps == config.MAX_PIECE_STEPS:
-            self.goal_achieved = True      
+            self.goal_achieved = True 
+            SoundManagement.play_sound(SoundManagement.goal_achieved)     
 
     def is_collide(self, mouse_pos:list, dice_value:int) -> bool:
         """

@@ -7,6 +7,7 @@ import resource.settings as config
 
 from util.painter import Painter
 from services.updater import Updater
+from util.sound_management import SoundManagement
 
 import random
 import time
@@ -26,6 +27,7 @@ class GameController:
         self.map = Map()
         self.dice = Dice()
         self.active = False   
+        self.active_end_game_music = True
         self.timer_name = 'end-game_timer'
         Updater.add_to_animate(self.timer_name, 2.5)     
 
@@ -161,12 +163,16 @@ class GameController:
         self.dice.reset()
 
     def animate(self) -> None:
+        if self.active_end_game_music:
+            self.active_end_game_music = False
+            SoundManagement.play_sound(SoundManagement.won)
         self.draw_end_game(random.choice(config.colors))
         time.sleep(0.3)
 
     def callback(self) -> None:
         self.draw_map()
         self.active = False
+        self.active_end_game_music = True
 
     def is_end_game(self) -> bool:
         """
@@ -190,6 +196,9 @@ class GameController:
         """
         if self.dice.is_max_value():
             self.is_eliminate_piece()
+            self.play_again()
+            return False
+        elif self.atual_ply.atual_piece.goal_achieved:
             self.play_again()
             return False
         else:
@@ -216,4 +225,5 @@ class GameController:
                 if p.get_atual_pos() == self.atual_ply.get_atual_piece_pos():
                     p.move_to_lobby()
                     again = True
+                    SoundManagement.play_sound(SoundManagement.eliminate)
         return again

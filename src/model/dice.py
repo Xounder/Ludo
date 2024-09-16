@@ -3,6 +3,7 @@ from random import randint
 
 import resource.settings as config
 from services.updater import Updater
+from util.sound_management import SoundManagement
 
 class Dice:
     def __init__(self) -> None:
@@ -83,6 +84,7 @@ class Dice:
             bool: Retorna True se houve colisão, caso contrário, False.
         """
         if self.rect.collidepoint(mouse_pos):
+            SoundManagement.play_sound(SoundManagement.dice_rolling)
             Updater.call_to_animate(self.timer_name, self.animate, self.callback)
             self.to_roll = False    
             return True

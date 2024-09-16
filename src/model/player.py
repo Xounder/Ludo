@@ -138,6 +138,7 @@ class Player:
             dice (Dice): Objeto do dado com o valor rolado
         """
         if dice.rolled and self.check_auto:
+            if not self.can_play: return
             self.check_auto = False
             self.played = self.is_auto_play(dice)
         self.input(dice)
@@ -162,6 +163,14 @@ class Player:
                             self.played = True
                             break
                 
+    def can_play(self):
+        for p in self.pieces:
+            if p.is_playable():
+                self.played = False
+                return True
+        self.played = True
+        return False
+
     def is_auto_play(self, dice:Dice) -> bool:
         """
         Determina se o jogador deve realizar a jogada automaticamente com base no valor do dado e no estado das peças
