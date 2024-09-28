@@ -27,7 +27,6 @@ class GameController:
         self.map = Map()
         self.dice = Dice()
         self.active = False   
-        self.active_end_game_music = True
         self.timer_name = 'end-game_timer'
         Updater.add_to_animate(self.timer_name, 2.5)     
 
@@ -44,6 +43,8 @@ class GameController:
         Args:
             players (dict): Dicionário contendo informações sobre os jogadores, incluindo cor e status
         """
+        self.active_end_game_music = True
+        self.checked_goal_achieved = False
         self.players = []
         for ply in players:
             if ply['player'] == config.INACTIVE: continue
@@ -64,6 +65,7 @@ class GameController:
         """
         self.ply_id = (self.ply_id + 1) % len(self.players)
         self.atual_ply = self.players[self.ply_id]
+        self.checked_goal_achieved = False
         self.play_again()
 
     # DRAW
@@ -198,7 +200,8 @@ class GameController:
             self.is_eliminate_piece()
             self.play_again()
             return False
-        elif self.atual_ply.atual_piece.goal_achieved:
+        elif self.atual_ply.atual_piece.goal_achieved and not self.checked_goal_achieved:
+            self.checked_goal_achieved = True
             self.play_again()
             return False
         else:

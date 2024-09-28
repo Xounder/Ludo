@@ -43,8 +43,7 @@ class Dice:
         """
         Rola o dado, atribuindo um novo valor aleatório e atualizando a imagem exibida
         """
-        #self.value = randint(1, self.MAX_VALUE)
-        self.value = randint(5, self.MAX_VALUE)
+        self.value = randint(1, self.MAX_VALUE)
         self.image = self.dices_surf[self.value-1]
 
     def reset(self) -> None:

@@ -23,15 +23,6 @@ class Player:
         self.played = False
         self.check_auto = True
 
-    def move_to_lobby(self, piece:int) -> None:
-        """
-        Move a peça especificada de volta para o lobby
-
-        Args:
-            piece (int): Índice da peça a ser movida para o lobby
-        """
-        self.pieces[piece].move_to_lobby()
-
     def play_again(self) -> None:
         """
         Reinicia o estado do jogador para o próximo turno, permitindo nova jogada e ativando a verificação automática
@@ -85,15 +76,6 @@ class Player:
         """
         return True if len([1 for p in self.pieces if p.goal_achieved]) == 4 else False
     
-    def move_piece(self, moves:int) -> None:
-        """
-        Move a peça atual do jogador pelo número de casas especificado
-
-        Args:
-            moves (int): Número de casas a serem movidas
-        """
-        self.atual_piece.to_animate_move(moves)
-    
     def get_pieces_pos(self) -> list:
         """
         Obtém as posições atuais de todas as peças do jogador
@@ -138,7 +120,7 @@ class Player:
             dice (Dice): Objeto do dado com o valor rolado
         """
         if dice.rolled and self.check_auto:
-            if not self.can_play: return
+            if not self.can_play(dice): return
             self.check_auto = False
             self.played = self.is_auto_play(dice)
         self.input(dice)
@@ -163,9 +145,9 @@ class Player:
                             self.played = True
                             break
                 
-    def can_play(self):
+    def can_play(self, dice:Dice):
         for p in self.pieces:
-            if p.is_playable():
+            if p.is_playable(dice):
                 self.played = False
                 return True
         self.played = True
@@ -181,17 +163,8 @@ class Player:
         Returns:
             bool: Retorna True se o jogador deve realizar a jogada automaticamente, caso contrário, False
         """
-        if not self.is_one_out(): # nenhuma peça fora do lobby
-            if dice.is_max_value(): return False
-            return True
-        else:
-            if self.is_only1_out(): # somente uma peça fora do lobby
-                if dice.is_max_value(): return False
-                self.atual_piece.to_animate_move(dice.value)                
-                return True
-            else: 
-                if self.is_only1_piece_to_move(dice.value): # somente uma peça é possivel de mover
-                    self.move_piece(dice.value)
-                    return True
-                return False
+        if dice.is_max_value(): return False
+        
+        if self.is_only1_out() or self.is_only1_piece_to_move(dice.value): # somente uma peça fora do lobby
+            return self.atual_piece.to_animate_move(dice.value)                
     

@@ -33,7 +33,6 @@ class Game:
                     pygame.quit()
                     sys.exit()
                     
-            Updater.update()
             if self.start_game.active:
                 self.start_game.draw()
             else:
@@ -43,6 +42,8 @@ class Game:
                 self.game_controller.draw()
             else:
                 Updater.set_exclusive_update(self.start_game, self.game_start)
+                
+            Updater.update()
 
             pygame.display.update()
             self.clock.tick(60)

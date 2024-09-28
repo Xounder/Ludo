@@ -101,11 +101,17 @@ class Piece:
         """
         Move a peça de volta para o lobby e redefine seu estado para a posição inicial e o número de passos como 0
         """
+        print('======= Eliminated =======')
+        print('~~~~~~ Prev-Pos ~~~~~~')
+        print(f'cor:{self.color}, atual_cell:{self.atual_cell}, steps:{self.steps}, is_lobby:{self.is_lobby}')
         Map.add_redraw_map(self.get_atual_pos())
         self.rect.topleft = self.to_tile(self.lobby_pos)
         self.atual_cell = self.first_cell
         self.steps = 0
         self.is_lobby = True
+        print('~~~~~~ After-Pos ~~~~~~')
+        print(f'cor:{self.color}, atual_cell:{self.atual_cell}, steps:{self.steps}, is_lobby:{self.is_lobby}')
+        print()
 
     def leave_lobby(self) -> None:
         """
@@ -125,6 +131,9 @@ class Piece:
 
     def reset(self) -> None:
         self.moved = False
+        print('======= Moved =======')
+        print(f'cor:{self.color}, atual_cell:{self.atual_cell}, steps:{self.steps}, is_lobby:{self.is_lobby}')
+        print()
 
     def animate(self) -> None:
         """
