@@ -35,7 +35,10 @@ class Piece:
     def get_atual_pos(self, step=-1) -> list:
         step = step if step != -1 else self.steps
         if step <= config.PIECE_STEPS_GOAL:
-            return config.map_steps[self.atual_cell] if not self.is_lobby else self.lobby_pos
+            if not self.is_lobby: 
+                return config.map_steps[self.atual_cell] 
+            else: 
+                return self.lobby_pos
         else:
             return config.map_goal_steps[self.color][self.atual_cell]
     
@@ -47,12 +50,15 @@ class Piece:
         return False
 
     def update_rect(self):
-        l = (config.map_steps[self.atual_cell] if self.steps <= 
-                     self.PIECE_STEPS_GOAL else config.map_goal_steps[self.color][self.atual_cell])
-        self.rect.topleft = self.to_tile(l)
+        if self.steps <= self.PIECE_STEPS_GOAL: 
+            to_tile_list = config.map_steps[self.atual_cell] 
+        else: 
+            to_tile_list = config.map_goal_steps[self.color][self.atual_cell]
+        self.rect.topleft = self.to_tile(to_tile_list)
         
-    def to_tile(self, l:list):
-        return list(map(lambda x: x * config.TILE_SIZE + 8, l))
+    def to_tile(self, to_tile_list:list):
+        gap_center = 8
+        return list(map(lambda x: x * config.TILE_SIZE + gap_center, to_tile_list))
 
     def move_to_lobby(self) -> None:
         Map.add_redraw_map(self.get_atual_pos())

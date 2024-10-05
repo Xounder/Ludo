@@ -8,6 +8,9 @@ PIECE_STEPS_GOAL = 51
 MAX_PIECE_STEPS = 57
 MAX_STEPS_MAP = 52
 
+# Maior valor do dado
+MAX_DICE_VALUE = 6
+
 # Identificadores para jogadores
 PLAYER = 0
 IA = 1

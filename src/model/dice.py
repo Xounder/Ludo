@@ -8,7 +8,7 @@ from managers.sound_manager import SoundManager
 class Dice:
     def __init__(self) -> None:
         self.screen = pygame.display.get_surface()
-        self.MAX_VALUE = 6
+        self.MAX_VALUE = config.MAX_DICE_VALUE
         self.value = self.MAX_VALUE
         self.to_roll = True
         self.rolled = False

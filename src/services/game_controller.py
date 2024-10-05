@@ -31,7 +31,8 @@ class GameController:
             if ply['player'] == config.PLAYER:
                 p = Player(config.colors[ply['color']]) 
             else:
-                pass
+                #BOTS
+                continue #REMOVER
             self.players.append(p)
 
         self.ply_id = 0

@@ -29,12 +29,16 @@ class Player:
         return True if len([1 for p in self.pieces if not p.is_lobby]) == 1 else False
 
     def is_only1_piece_to_move(self, value:Dice) -> bool:
-        p = [p.id for p in self.pieces 
-                if not p.is_lobby and p.steps + value <= config.MAX_PIECE_STEPS or p.is_lobby and value == 6]
+        p = [p.id for p in self.pieces if self.can_move_piece(p, value)]
         if len(p) == 1:
             self.atual_piece = self.pieces[p[0]]
             return True
         return False
+    
+    def can_move_piece(self, piece:Piece, value: Dice) -> bool:
+        if not piece.is_lobby:
+            return piece.steps + value <= config.MAX_PIECE_STEPS
+        return value == config.MAX_DICE_VALUE 
     
     def is_win(self) -> bool:
         return True if len([1 for p in self.pieces if p.goal_achieved]) == 4 else False
@@ -83,6 +87,6 @@ class Player:
     def is_auto_play(self, dice:Dice) -> bool:
         if dice.is_max_value(): return False
         
-        if self.is_only1_out() or self.is_only1_piece_to_move(dice.value): # somente uma peça fora do lobby
+        if self.is_only1_out() or self.is_only1_piece_to_move(dice.value):
             return self.atual_piece.to_animate_move(dice.value)                
     
