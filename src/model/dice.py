@@ -48,7 +48,7 @@ class Dice:
         
     def is_collide(self, mouse_pos:list) -> bool:
         if self.rect.collidepoint(mouse_pos):
-            SoundManager.play_sound(SoundManager.dice_rolling)
+            SoundManager.play_sound('dice_rolling')
             Updater.call_to_animate(self.timer_name, self.animate, self.callback)
             self.to_roll = False    
             return True

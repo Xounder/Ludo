@@ -20,10 +20,11 @@ class SoundManager:
                 # Define o som como um atributo da classe
                 s = pygame.mixer.Sound(sound_path)
                 s.set_volume(0.2)
-                setattr(SoundManager, sound_name, s)
+                SoundManager.all_sounds[sound_name] = s
 
     @staticmethod
-    def play_sound(new_sound):
-        if SoundManager.atual_sound: SoundManager.atual_sound.stop()
-        new_sound.play()
-        SoundManager.atual_sound = new_sound
+    def play_sound(sound_name):
+        if SoundManager.atual_sound: 
+            SoundManager.all_sounds[SoundManager.atual_sound].stop()
+        SoundManager.all_sounds[sound_name].play()
+        SoundManager.atual_sound = sound_name

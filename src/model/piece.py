@@ -77,7 +77,7 @@ class Piece:
         if self.steps < self.max_steps:
             self.steps += 1
             self.move()
-            SoundManager.play_sound(SoundManager.movement)
+            SoundManager.play_sound('movement')
             time.sleep(0.01)
         else:
             Updater.finish_animation(self.timer_name)
@@ -114,7 +114,7 @@ class Piece:
     def check_goal(self) -> None:
         if self.steps == config.MAX_PIECE_STEPS:
             self.goal_achieved = True 
-            SoundManager.play_sound(SoundManager.goal_achieved)     
+            SoundManager.play_sound('goal_achieved')     
 
     def is_collide(self, mouse_pos:list, dice_value:int) -> bool:
         if self.rect.collidepoint(mouse_pos):

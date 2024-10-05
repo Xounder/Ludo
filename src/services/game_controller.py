@@ -123,7 +123,7 @@ class GameController:
     def animate(self) -> None:
         if self.active_end_game_music:
             self.active_end_game_music = False
-            SoundManager.play_sound(SoundManager.won)
+            SoundManager.play_sound('won')
         self.draw_end_game(random.choice(config.colors))
         time.sleep(0.3)
 
@@ -165,5 +165,5 @@ class GameController:
                 if p.get_atual_pos() == self.atual_ply.get_atual_piece_pos():
                     p.move_to_lobby()
                     again = True
-                    SoundManager.play_sound(SoundManager.eliminate)
+                    SoundManager.play_sound('eliminate')
         return again
