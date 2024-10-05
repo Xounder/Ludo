@@ -42,7 +42,7 @@ class Piece:
         """
         Loads the piece's image assets and sets up the animation timer.
         """
-        self.image = pygame.image.load(f'img/{self.color}.png').convert_alpha()
+        self.image = pygame.image.load(f'img/pieces/{self.color}.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=self.to_tile(self.lobby_pos))
         UpdaterManager.add_to_animate(self.timer_name, 2)
 
