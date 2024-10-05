@@ -43,6 +43,7 @@ class Piece:
             return config.map_goal_steps[self.color][self.atual_cell]
     
     def is_playable(self, dice:Dice) -> bool:
+        if self.goal_achieved: return False
         if self.steps + dice.value <= config.MAX_PIECE_STEPS:
             if self.is_lobby:
                 return dice.is_max_value()

@@ -152,7 +152,7 @@ class GameController:
             if self.is_eliminate_piece():
                 self.play_again()
                 return False
-            return True
+        return True
         
     def is_eliminate_piece(self) -> bool:
         # células neutras
