@@ -1,6 +1,6 @@
 from typing import Callable, Optional
 
-from util.timer_management import TimerManagement
+from managers.timer_manager import TimerManager
 
 class Animation:
     def __init__(self, timer_name:str, todo: Callable[[], None], callback: Optional[Callable[[], None]] = None) -> None:
@@ -10,7 +10,7 @@ class Animation:
         self.is_animate = True
 
     def animate(self) -> bool:
-        if TimerManagement.is_run(self.timer_name):
+        if TimerManager.is_run(self.timer_name):
             self.todo()
             return True
         else:

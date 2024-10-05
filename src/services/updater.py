@@ -1,7 +1,7 @@
 from typing import Callable, Optional
 
-from util.timer_management import TimerManagement
 from model.animation import Animation
+from managers.timer_manager import TimerManager
 
 class Updater:
     update_list = {}
@@ -29,20 +29,20 @@ class Updater:
 
     @staticmethod
     def add_to_animate(timer_name:str, duration:int) -> None:
-        TimerManagement.add_timer(timer_name, duration)
+        TimerManager.add_timer(timer_name, duration)
 
     @staticmethod
     def finish_animation(timer_name:str) -> None:
-        TimerManagement.deactive(timer_name)
+        TimerManager.deactive(timer_name)
 
     @staticmethod
     def call_to_animate(timer_name:str, todo:Callable[[], None], callback: Optional[Callable[[], None]] = None) -> None:
-        TimerManagement.active_timer(timer_name)
+        TimerManager.active_timer(timer_name)
         Updater.current_animate = Animation(timer_name, todo, callback)
         
     @staticmethod
     def update() -> None:
-        TimerManagement.update_timers()
+        TimerManager.update_timers()
         if Updater.current_animate and Updater.current_animate.animate(): return
         if Updater.is_exclusive_update(): return
         if not Updater.update_list: return

@@ -3,9 +3,8 @@ import pygame, sys
 import resource.settings as config
 from services.game_controller import GameController
 from services.start_game import StartGame
-
 from services.updater import Updater
-from util.sound_management import SoundManagement
+from managers.sound_manager import SoundManager
 
 class Game:
     def __init__(self) -> None:
@@ -14,7 +13,7 @@ class Game:
         pygame.display.set_caption('L U D O')
         self.clock = pygame.time.Clock()
 
-        SoundManagement.initialize()
+        SoundManager.initialize()
 
         self.game_controller = GameController()
         self.start_game = StartGame()

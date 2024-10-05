@@ -1,9 +1,9 @@
 import pygame
-from util.timer_management import TimerManagement
+from managers.timer_manager import TimerManager
 
-class InputManagement:
+class InputManager:
     cursor = (0, 0)
-    TimerManagement.add_timer('mouse_timer', 0.4)
+    TimerManager.add_timer('mouse_timer', 0.4)
 
     @staticmethod
     def mouse_is_pressed():
@@ -14,9 +14,9 @@ class InputManagement:
         Returns:
             bool: Retorna True se o botão esquerdo do mouse está pressionado, caso contrário, False
         """
-        if TimerManagement.is_run('mouse_timer'): return
+        if TimerManager.is_run('mouse_timer'): return
         if pygame.mouse.get_pressed()[0]:
-            InputManagement.cursor = pygame.mouse.get_pos()
-            TimerManagement.active_timer('mouse_timer')
+            InputManager.cursor = pygame.mouse.get_pos()
+            TimerManager.active_timer('mouse_timer')
             return True
         return False

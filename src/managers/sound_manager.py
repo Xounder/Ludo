@@ -1,15 +1,14 @@
 import pygame
 import os
 
-from enum import Enum
-
-class SoundManagement:
+class SoundManager:
     
     atual_sound = None
+    all_sounds = {}
 
     @staticmethod
     def initialize():
-        SoundManagement.load_sounds()
+        SoundManager.load_sounds()
 
     @staticmethod
     def load_sounds():
@@ -21,11 +20,10 @@ class SoundManagement:
                 # Define o som como um atributo da classe
                 s = pygame.mixer.Sound(sound_path)
                 s.set_volume(0.2)
-                setattr(SoundManagement, sound_name, s)
+                setattr(SoundManager, sound_name, s)
 
     @staticmethod
-    def play_sound(sound):
-        if SoundManagement.atual_sound: SoundManagement.atual_sound.stop()
-        
-        sound.play()
-        SoundManagement.atual_sound = sound
+    def play_sound(new_sound):
+        if SoundManager.atual_sound: SoundManager.atual_sound.stop()
+        new_sound.play()
+        SoundManager.atual_sound = new_sound
