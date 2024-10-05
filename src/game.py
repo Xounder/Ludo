@@ -3,7 +3,7 @@ import pygame, sys
 import resource.settings as config
 from services.game_controller import GameController
 from services.start_game import StartGame
-from services.updater import Updater
+from managers.updater_manager import UpdaterManager
 from managers.sound_manager import SoundManager
 
 class Game:
@@ -18,7 +18,7 @@ class Game:
         self.game_controller = GameController()
         self.start_game = StartGame()
 
-        Updater.set_exclusive_update(self.start_game, self.game_start)
+        UpdaterManager.set_exclusive_update(self.start_game, self.game_start)
         
         self.game_controller.draw_map()
 
@@ -35,14 +35,14 @@ class Game:
             if self.start_game.active:
                 self.start_game.draw()
             else:
-                Updater.set_exclusive_update(self.game_controller, self.start_game.init)
+                UpdaterManager.set_exclusive_update(self.game_controller, self.start_game.init)
 
             if self.game_controller.active:
                 self.game_controller.draw()
             else:
-                Updater.set_exclusive_update(self.start_game, self.game_start)
+                UpdaterManager.set_exclusive_update(self.start_game, self.game_start)
                 
-            Updater.update()
+            UpdaterManager.update()
 
             pygame.display.update()
             self.clock.tick(60)

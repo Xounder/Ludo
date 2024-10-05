@@ -3,7 +3,7 @@ import pygame
 import resource.settings as config
 from model.map import Map
 from model.dice import Dice
-from services.updater import Updater
+from managers.updater_manager import UpdaterManager
 from managers.sound_manager import SoundManager
 
 import time
@@ -30,7 +30,7 @@ class Piece:
     def assets(self) -> None:
         self.image = pygame.image.load(f'img/{self.color}.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=self.to_tile(self.lobby_pos))
-        Updater.add_to_animate(self.timer_name, 2)
+        UpdaterManager.add_to_animate(self.timer_name, 2)
 
     def get_atual_pos(self, step=-1) -> list:
         step = step if step != -1 else self.steps
@@ -80,7 +80,7 @@ class Piece:
             SoundManager.play_sound('movement')
             time.sleep(0.01)
         else:
-            Updater.finish_animation(self.timer_name)
+            UpdaterManager.finish_animation(self.timer_name)
 
     def move(self) -> bool:
         Map.add_redraw_map(self.get_atual_pos(self.steps - 1))
@@ -99,7 +99,7 @@ class Piece:
         if self.can_move():
             self.max_steps = self.steps + moves 
             self.moved = True
-            Updater.call_to_animate(self.timer_name, self.animate, callback=self.reset)
+            UpdaterManager.call_to_animate(self.timer_name, self.animate, callback=self.reset)
             return True
         return False
                    

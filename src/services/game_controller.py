@@ -7,7 +7,7 @@ from model.map import Map
 from model.player import Player
 from model.dice import Dice
 from util.painter import Painter
-from services.updater import Updater
+from managers.updater_manager import UpdaterManager
 from managers.sound_manager import SoundManager
 
 class GameController:
@@ -17,7 +17,7 @@ class GameController:
         self.dice = Dice()
         self.active = False   
         self.timer_name = 'end-game_timer'
-        Updater.add_to_animate(self.timer_name, 2.5)     
+        UpdaterManager.add_to_animate(self.timer_name, 2.5)     
 
     def draw_map(self) -> None:
         self.map.draw_map()
@@ -134,7 +134,7 @@ class GameController:
 
     def is_end_game(self) -> bool:
         if self.atual_ply.is_win():
-            Updater.call_to_animate(self.timer_name, self.animate, self.callback)
+            UpdaterManager.call_to_animate(self.timer_name, self.animate, self.callback)
             return True
         return False
     
@@ -154,7 +154,7 @@ class GameController:
             return True
         
     def is_eliminate_piece(self) -> bool:
-        # célula neutra
+        # células neutras
         if config.star_cells.count(self.atual_ply.get_atual_piece_pos()): return False
         if config.map_fcell_colors.count(self.atual_ply.get_atual_piece_pos()): return False
 

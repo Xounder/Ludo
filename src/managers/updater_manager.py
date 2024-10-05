@@ -3,7 +3,7 @@ from typing import Callable, Optional
 from model.animation import Animation
 from managers.timer_manager import TimerManager
 
-class Updater:
+class UpdaterManager:
     update_list = {}
     current_animate = None
     exclusive_update = None
@@ -12,20 +12,20 @@ class Updater:
 
     @staticmethod
     def add_to_update_list(to_update:Callable[[], None]) -> None:
-        Updater.update_list[to_update] = to_update
+        UpdaterManager.update_list[to_update] = to_update
 
     @staticmethod
     def set_exclusive_update(to_update:object, callback: Optional[Callable[[], None]] = None):
-        if Updater.exclusive_update == to_update: return
-        Updater.exclusive_update = to_update
-        Updater.exclusive_callback = callback
-        Updater.is_exclusive_callback = True if callback else False
+        if UpdaterManager.exclusive_update == to_update: return
+        UpdaterManager.exclusive_update = to_update
+        UpdaterManager.exclusive_callback = callback
+        UpdaterManager.is_exclusive_callback = True if callback else False
         
     @staticmethod
     def stop_exclusive_update():
-        Updater.exclusive_update = None
-        Updater.exclusive_callback = None
-        Updater.is_exclusive_callback = False
+        UpdaterManager.exclusive_update = None
+        UpdaterManager.exclusive_callback = None
+        UpdaterManager.is_exclusive_callback = False
 
     @staticmethod
     def add_to_animate(timer_name:str, duration:int) -> None:
@@ -38,22 +38,22 @@ class Updater:
     @staticmethod
     def call_to_animate(timer_name:str, todo:Callable[[], None], callback: Optional[Callable[[], None]] = None) -> None:
         TimerManager.active_timer(timer_name)
-        Updater.current_animate = Animation(timer_name, todo, callback)
+        UpdaterManager.current_animate = Animation(timer_name, todo, callback)
         
     @staticmethod
     def update() -> None:
         TimerManager.update_timers()
-        if Updater.current_animate and Updater.current_animate.animate(): return
-        if Updater.is_exclusive_update(): return
-        if not Updater.update_list: return
-        for update in Updater.update_list:
+        if UpdaterManager.current_animate and UpdaterManager.current_animate.animate(): return
+        if UpdaterManager.is_exclusive_update(): return
+        if not UpdaterManager.update_list: return
+        for update in UpdaterManager.update_list:
             update()
         
     def is_exclusive_update() -> None:
-        if Updater.exclusive_update:
-            Updater.exclusive_update.update()
-            if not Updater.exclusive_update.active and Updater.is_exclusive_callback:
-                Updater.is_exclusive_callback = False
-                Updater.exclusive_callback()
+        if UpdaterManager.exclusive_update:
+            UpdaterManager.exclusive_update.update()
+            if not UpdaterManager.exclusive_update.active and UpdaterManager.is_exclusive_callback:
+                UpdaterManager.is_exclusive_callback = False
+                UpdaterManager.exclusive_callback()
             return True
         return False

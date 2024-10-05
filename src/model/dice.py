@@ -2,7 +2,7 @@ import pygame
 from random import randint
 
 import resource.settings as config
-from services.updater import Updater
+from managers.updater_manager import UpdaterManager
 from managers.sound_manager import SoundManager
 
 class Dice:
@@ -20,7 +20,7 @@ class Dice:
         self.dices_surf = [pygame.image.load(f'img/dice/dice{i+1}.png').convert_alpha() for i in range(6)]
         self.image = self.dices_surf[self.value-1]
         self.rect = self.image.get_rect(center=(config.SCREEN_WIDTH/2 + 1, config.SCREEN_HEIGHT/2 + 1))
-        Updater.add_to_animate(self.timer_name, 0.4)
+        UpdaterManager.add_to_animate(self.timer_name, 0.4)
 
     def is_max_value(self) -> bool:
         return True if self.value == self.MAX_VALUE else False
@@ -49,7 +49,7 @@ class Dice:
     def is_collide(self, mouse_pos:list) -> bool:
         if self.rect.collidepoint(mouse_pos):
             SoundManager.play_sound('dice_rolling')
-            Updater.call_to_animate(self.timer_name, self.animate, self.callback)
+            UpdaterManager.call_to_animate(self.timer_name, self.animate, self.callback)
             self.to_roll = False    
             return True
         return False
