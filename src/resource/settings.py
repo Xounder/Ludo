@@ -13,10 +13,10 @@ MAX_DICE_VALUE = 6
 
 # Identificadores para jogadores
 PLAYER = 0
-IA = 1
+AI = 1
 INACTIVE = 2
 
-player_status = ['PLAYER', 'IA', '']
+player_status = ['PLAYER', 'AI', '']
 
 # Cores disponíveis para os jogadores
 colors = ['yellow', 'blue', 'red', 'green']

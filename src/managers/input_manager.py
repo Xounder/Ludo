@@ -9,10 +9,9 @@ class InputManager:
     def mouse_is_pressed():
         """
         Verifica se o botão esquerdo do mouse está pressionado e atualiza a posição do cursor
-        Utiliza um temporizador para evitar verificações excessivas
 
         Returns:
-            bool: Retorna True se o botão esquerdo do mouse está pressionado, caso contrário, False
+            bool: True se o botão esquerdo do mouse está pressionado, caso contrário, False
         """
         if TimerManager.is_run('mouse_timer'): return
         if pygame.mouse.get_pressed()[0]:

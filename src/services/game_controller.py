@@ -4,7 +4,8 @@ import time
 
 import resource.settings as config
 from model.map import Map
-from model.player import Player
+from model.human_player import HumanPlayer
+from model.ai_player import AIPlayer
 from model.dice import Dice
 from util.painter import Painter
 from managers.updater_manager import UpdaterManager
@@ -28,11 +29,12 @@ class GameController:
         self.players = []
         for ply in players:
             if ply['player'] == config.INACTIVE: continue
+
             if ply['player'] == config.PLAYER:
-                p = Player(config.colors[ply['color']]) 
-            else:
-                #BOTS
-                continue #REMOVER
+                p = HumanPlayer(config.colors[ply['color']]) 
+            if ply['player'] == config.AI:
+                p = AIPlayer(config.colors[ply['color']]) 
+
             self.players.append(p)
 
         self.ply_id = 0
