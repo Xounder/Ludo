@@ -5,17 +5,27 @@ from managers.input_manager import InputManager
 from util.painter import ClickRect, Painter
 
 class StartGame:
+    """
+    Controls the start game menu and player selections.
+    """
+
     def __init__(self) -> None:
+        """
+        Initializes the start game menu.
+        """
         self.screen = pygame.display.get_surface()
         self.size = (300, 260)
         self.pos = (config.SCREEN_WIDTH/2 - self.size[0]/2, config.SCREEN_HEIGHT/2 - self.size[1]/2)
         
-        self.init()
+        self.initialize()
         self.create_surf_inputs()
 
         self.painter = Painter()
 
-    def init(self) -> None:
+    def initialize(self) -> None:
+        """
+        Sets up the initial state of players and selectors.
+        """
         self.players = []
         self.active = True
         self.selectors = [
@@ -26,6 +36,9 @@ class StartGame:
         ]
 
     def create_surf_inputs(self) -> None:
+        """
+        Creates surface inputs for start and player selection buttons.
+        """
         # Start Button
         self.start_button = ClickRect(surf_size=(90, 60),
                                       rect_pos=(config.SCREEN_WIDTH/2 + 40, config.SCREEN_HEIGHT/2 - 15),
@@ -50,6 +63,9 @@ class StartGame:
             pos[1] += 40
 
     def draw(self) -> None:
+        """
+        Draws the start game menu and buttons on the screen.
+        """
         Painter.draw_rect(screen=self.screen, size=self.size, pos=self.pos, d=10)
 
         b_c = 'green' if self.is_start_game() else 'red'
@@ -61,6 +77,12 @@ class StartGame:
         self.draw_texts()
 
     def draw_selector(self, id:int) -> None:
+        """
+        Draws the selector for a specific player based on their current state.
+        
+        Args:
+            id (int): The index of the player selector to draw.
+        """
         atual_sel = self.selectors[id]
         c = (['gray', 'gray'] if atual_sel['player'] == config.INACTIVE 
                              else ['black', config.colors[atual_sel['color']]])
@@ -69,6 +91,9 @@ class StartGame:
         self.player_selection[id].draw_animated_rect(screen=self.screen, f_color='black')
 
     def draw_texts(self) -> None:
+        """
+        Draws the game title and player status texts.
+        """
         Painter.blit_text_shadow(screen=self.screen,
                                  text='L U D O', 
                                  color='red', 
@@ -102,6 +127,9 @@ class StartGame:
                                      font_size=24)
 
     def update(self) -> None:
+        """
+        Handles input updates for starting the game and changing selections.
+        """
         if InputManager.mouse_is_pressed():
             if self.start_button.is_rect_collide_point(InputManager.cursor):
                 self.active = not self.is_start_game()
@@ -118,6 +146,11 @@ class StartGame:
                         break
             
     def is_start_game(self) -> bool:
+        """Checks if the conditions to start the game are met.
+        
+        Returns:
+            bool: True if the game can start, False otherwise.
+        """
         check_color = []
         check_player = []
         for sel in self.selectors:

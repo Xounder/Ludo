@@ -2,16 +2,19 @@ import pygame
 from managers.timer_manager import TimerManager
 
 class InputManager:
+    """
+    Manages mouse input and cursor position.
+    """
     cursor = (0, 0)
     TimerManager.add_timer('mouse_timer', 0.4)
 
     @staticmethod
-    def mouse_is_pressed():
+    def mouse_is_pressed() -> bool:
         """
-        Verifica se o botão esquerdo do mouse está pressionado e atualiza a posição do cursor
+        Checks if the left mouse button is pressed.
 
         Returns:
-            bool: True se o botão esquerdo do mouse está pressionado, caso contrário, False
+            bool: True if the left mouse button is pressed, False otherwise.
         """
         if TimerManager.is_run('mouse_timer'): return
         if pygame.mouse.get_pressed()[0]:
